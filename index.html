@@ -289,3 +289,444 @@
   </script>
 </body>
 </html>
+Как внедрить:
+
+Скопируйте этот код в свой index.html.
+Замените существующий на GitHub.
+Через 1–2 минуты проверьте на https://nedsaw.github.io/ — фон с “матрицей” будет работать на всех устройствах, не мешая взаимодействию с сайтом.
+Если что-то ещё добавить или изменить — пишите!
+
+
+
+
+GPT 4.1
+11205
+chars
+N
+NED SAW
+NED SAW
+добавь адаптацию под мобильные устройства чтобы верхняя панель умещалась на экарне, она должна скрываться кнопкой в виде трех полосок
+
+
+
+133
+chars
+Coding Assistant
+Coding Assistant
+Отлично, вот решение задачи по шагам:
+
+Добавим "бургер-меню"
+Для мобильного разрешения (< 700px) навигация скрыта, появляется кнопка-три полоски.
+При нажатии на бургер меню навигация раскрывается вертикально, занимает всю ширину сверху.
+
+Изменим стили адаптивно
+С помощью media queries панель и её элементы будут перестраиваться под разные ширины экрана.
+
+В App.jsx (index.html)
+Используем состояние для отслеживания, открыто ли меню.
+Кнопка бургер-меню появляется только на мобильных.
+
+Вот полный пример index.html с “матрицей” и адаптивным бургер-меню
+html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Портфолио на React - GitHub Pages</title>
+  <!-- React и ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel для поддержки JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html, body {height:100%;}
+    body { background: #111827; margin: 0; color: #fff; font-family: system-ui, sans-serif; min-height: 100vh;}
+    #matrix-canvas {
+      position: fixed;
+      left: 0; top: 0; 
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events:none;
+      opacity:0.26;
+      filter: blur(0.2px) brightness(110%);
+      transition: opacity 1s;
+    }
+    #root > div {
+      position: relative;
+      z-index: 2;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 16px;}
+    .nav {
+      display:flex;
+      gap:2em;
+      justify-content:center;
+      margin: 20px 0;
+      transition: all 0.3s;
+    }
+    .nav button {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1em;
+      cursor: pointer;
+      padding: 6px 12px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .nav .active, .nav button:hover { color: #4ade80; border-bottom: 2px solid #4ade80;}
+
+    /* Бургер-меню */
+    .burger {
+      display: none;
+      background: none;
+      border: none;
+      flex-direction: column;
+      width: 38px;
+      height: 38px;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin: 0 0 0 10px;
+      position: relative;
+      z-index: 11;
+    }
+    .burger span {
+      display: block;
+      height: 4px;
+      width: 28px;
+      margin: 4px 0;
+      background: #4ade80;
+      border-radius: 3px;
+      transition: 0.3s;
+    }
+    /* Бургер: анимация перекрестия */
+    .burger.open span:nth-child(1) {
+      transform: rotate(45deg) translate(6px,6px);
+    }
+    .burger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .burger.open span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px,-7px);
+    }
+
+    /* Мобильная адаптация */
+    @media (max-width: 700px) {
+      .container { padding: 8px; }
+      .nav {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        background: rgba(15,23,42,0.98);
+        flex-direction: column;
+        gap: 0;
+        justify-content: flex-start;
+        align-items: center;
+        height: 100vh;
+        z-index:10;
+        padding-top: 72px;
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .nav.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .nav button {
+        font-size: 1.3em;
+        padding: 26px;
+        width: 100%;
+        border-bottom: 1px solid #14532d28;
+      }
+      .burger {
+        display: flex;
+        position: fixed;
+        top: 16px;
+        right: 16px;
+      }
+      main { margin-top: 70px; }
+    }
+
+    .loading-overlay { position:fixed; inset:0; background:#0f172a; z-index:1000; display: flex; align-items:center; justify-content:center; transition: opacity 0.6s;}
+    .loading-overlay.loaded { opacity:0; pointer-events: none; }
+    .project-list { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;}
+    .project { background: #1f2937; border: 1px solid #14532d22; border-radius: 10px; padding: 16px; min-width:220px; max-width:260px; flex:1 1 220px; }
+    .tags { margin: 7px 0 0 0; color:#67e8f9; font-size:0.9em;}
+    footer { text-align:center; padding:22px 0; border-top:2px solid #14532d22; color:#4ade80;}
+    input, textarea { width:100%; padding:7px; margin:4px 0 10px; border-radius:6px; background:#222b3a; color:#fff; border:1px solid #18564266;}
+    label { color:#4ade80;}
+    .glow { text-shadow: 0 0 14px #4ade80aa; }
+    .btn { background-color:#4ade8022; border:1px solid #4ade8077; padding:7px 16px; border-radius:5px; color:#4ade80; font-weight:bold; cursor:pointer;}
+    .btn:hover { background-color:#4ade8077; color:#0f172a; }
+  </style>
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    // Матрица-анимация
+    function useMatrixRain() {
+      React.useEffect(() => {
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const charset = 'アイウエオカキクケコサシスセソ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзиклмнопрстуфхчшщъыьэюя';
+        const fontSize = 18;
+        const columns = Math.floor(width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        function draw() {
+          ctx.fillStyle = 'rgba(17,24,39,0.23)';
+          ctx.fillRect(0, 0, width, height);
+
+          ctx.font = fontSize + "px monospace";
+          ctx.fillStyle = "#4ade80";
+          for (let i = 0; i < drops.length; i++) {
+            const text = charset[Math.floor(Math.random() * charset.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+        }
+
+        let animation = setInterval(draw, 41);
+
+        function handleResize() {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          canvas.width = width;
+          canvas.height = height;
+          drops = Array(Math.floor(width / fontSize)).fill(1);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+          clearInterval(animation);
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
+    }
+
+    // Основной компонент
+    function App() {
+      useMatrixRain();
+
+      const [activeSection, setActiveSection] = React.useState('about');
+      const [loading, setLoading] = React.useState(true);
+      const [navOpen, setNavOpen] = React.useState(false);
+
+      React.useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 600);
+        return () => clearTimeout(timer);
+      }, []);
+
+      // Скроем меню после выбора пункта (на мобиле)
+      function handleNavClick(section) {
+        setActiveSection(section);
+        setNavOpen(false);
+      }
+
+      const projects = [
+        {
+          title: "AI Chatbot",
+          description: "React + Node.js чат-бот с интеграцией OpenAI API и интерфейсом в стиле терминала.",
+          tags: ["React", "Node.js", "OpenAI"]
+        },
+        {
+          title: "E-commerce Dashboard",
+          description: "Панель управления магазином с аналитикой и интеграцией Stripe.",
+          tags: ["Vue", "Vuex", "Firebase"]
+        },
+        {
+          title: "Code Editor Extension",
+          description: "Расширение VS Code с функцией автокомментирования и рефакторинга кода.",
+          tags: ["TypeScript", "VSCode API"]
+        },
+        {
+          title: "Fitness Tracker",
+          description: "Приложение-трекер для спорта — планирование, анализ, мотивация.",
+          tags: ["React Native", "Redux"]
+        }
+      ];
+
+      function Nav() {
+        const sections = [
+          {id: 'about', label: 'Обо мне'},
+          {id: 'projects', label: 'Проекты'},
+          {id: 'skills', label: 'Навыки'},
+          {id: 'contact', label: 'Контакты'},
+        ];
+        // мобильно-ли сейчас (медиа-запрос)
+        const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 700);
+        React.useEffect(() => {
+          function onResize() {
+            setIsMobile(window.innerWidth <= 700);
+          }
+          window.addEventListener('resize', onResize);
+          return () => window.removeEventListener('resize', onResize);
+        }, []);
+
+        return (
+          <div>
+            <button
+              className={`burger${navOpen ? ' open' : ''}`}
+              aria-label="Открыть меню"
+              aria-expanded={navOpen}
+              type="button"
+              onClick={() => setNavOpen(!navOpen)}
+            >
+              <span></span><span></span><span></span>
+            </button>
+            <nav className={`nav${navOpen && isMobile ? ' open' : ''}`}>
+              {sections.map(s => (
+                <button key={s.id}
+                  className={activeSection === s.id ? 'active' : ''}
+                  onClick={() => handleNavClick(s.id)}
+                  tabIndex={navOpen || !isMobile ? 0 : -1}
+                >{s.label}</button>
+              ))}
+            </nav>
+          </div>
+        );
+      }
+
+      function AboutSection() {
+        return (
+          <section>
+            <h2 className="glow">Привет, я Frontend/Fullstack разработчик 👋</h2>
+            <p>
+              Опыт в React, Node.js, создании сложных SPA и Telegram/AI-ботов.
+              Разрабатываю современные решения, делаю код удобным и быстрым.<br/>
+              Сейчас активно углубляюсь в AI и автоматизации.
+            </p>
+          </section>
+        );
+      }
+
+      function ProjectsSection() {
+        return (
+          <section>
+            <h2 className="glow">Мои проекты 🔥</h2>
+            <div className="project-list">
+              {projects.map(p => (
+                <div className="project" key={p.title}>
+                  <h3>{p.title}</h3>
+                  <div>{p.description}</div>
+                  <div className="tags">{p.tags.join(', ')}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      }
+
+      function SkillsSection() {
+        return (
+          <section>
+            <h2 className="glow">Навыки 🛠️</h2>
+            <ul>
+              <li>React, Vue, Next.js, React Native, TypeScript</li>
+              <li>Node.js, Express, REST API</li>
+              <li>AI/ML интеграция (OpenAI API)</li>
+              <li>PostgreSQL, Firebase, MongoDB</li>
+              <li>Linux, Docker, Git, CI/CD</li>
+            </ul>
+          </section>
+        );
+      }
+
+      function ContactSection() {
+        const [form, setForm] = React.useState({name:'', email:'', message:''});
+        const [sent, setSent] = React.useState(false);
+
+        function handleChange(e) {
+          setForm({...form, [e.target.name]: e.target.value});
+        }
+
+        function handleSubmit(e) {
+          e.preventDefault();
+          setSent(true);
+        }
+
+        return (
+          <section>
+            <h2 className="glow">Контакты 📬</h2>
+            {sent ? (<div>Спасибо! Сообщение отправлено.</div>) : (
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label>Имя</label>
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  required />
+              </div>
+              <div>
+                <label>Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required />
+              </div>
+              <div>
+                <label>Сообщение</label>
+                <textarea
+                  name="message"
+                  rows={4}
+                  value={form.message}
+                  onChange={handleChange}
+                  required />
+              </div>
+              <button className="btn" type="submit">Отправить</button>
+            </form>
+            )}
+            <div style={{marginTop:10}}>
+              <a href="mailto:your@email.com" style={{color:'#4ade80'}}>your@email.com</a>
+            </div>
+          </section>
+        );
+      }
+
+      return (
+        <div>
+          <div className={"loading-overlay" + (!loading ? " loaded" : "")}>
+            <div>
+              <h1 className="glow" style={{fontSize:'2em', marginBottom:10}}>Загрузка портфолио...</h1>
+              <div style={{fontSize:'1.5em'}}>Инициализация digital presence</div>
+            </div>
+          </div>
+          <div className="container">
+            <Nav />
+            <main>
+              {activeSection === 'about' && <AboutSection />}
+              {activeSection === 'projects' && <ProjectsSection />}
+              {activeSection === 'skills' && <SkillsSection />}
+              {activeSection === 'contact' && <ContactSection />}
+            </main>
+          </div>
+          <footer>
+            {'<developed_by_me/>'} &nbsp; © {new Date().getFullYear()}
+          </footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
