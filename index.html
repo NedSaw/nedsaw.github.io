@@ -10,11 +10,27 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { background: #111827; margin: 0; color: #fff; font-family: system-ui, sans-serif; }
-    .container { max-width: 900px; margin: 0 auto; padding: 16px; }
-    .nav { display:flex; gap:2em; justify-content:center; margin: 20px 0; }
+    html, body {height:100%;}
+    body { background: #111827; margin: 0; color: #fff; font-family: system-ui, sans-serif; min-height: 100vh;}
+    #matrix-canvas {
+      position: fixed;
+      left: 0; top: 0; 
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events:none;
+      opacity:0.26;
+      filter: blur(0.2px) brightness(110%);
+      transition: opacity 1s;
+    }
+    #root > div {
+      position: relative;
+      z-index: 2;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 16px;}
+    .nav { display:flex; gap:2em; justify-content:center; margin: 20px 0;}
     .nav button { background: none; border: none; color: #aaa; font-size: 1em; cursor: pointer; padding: 6px 12px;}
-    .nav .active, .nav button:hover { color: #4ade80; border-bottom: 2px solid #4ade80; }
+    .nav .active, .nav button:hover { color: #4ade80; border-bottom: 2px solid #4ade80;}
     .loading-overlay { position:fixed; inset:0; background:#0f172a; z-index:1000; display: flex; align-items:center; justify-content:center; transition: opacity 0.6s;}
     .loading-overlay.loaded { opacity:0; pointer-events: none; }
     .project-list { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;}
@@ -29,20 +45,78 @@
   </style>
 </head>
 <body>
+  <canvas id="matrix-canvas"></canvas>
   <div id="root"></div>
   <script type="text/babel">
+
+    // Матрица-анимация
+    function useMatrixRain() {
+      React.useEffect(() => {
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        // Массив букв и цифр для Матрицы
+        const charset = 'アイウエオカキクケコサシスセソ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзиклмнопрстуфхчшщъыьэюя';
+        // Параметры
+        const fontSize = 18;
+        const columns = Math.floor(width / fontSize);
+        // y-позиция "капли" для каждой колонки
+        let drops = Array(columns).fill(1);
+
+        // Анимация
+        function draw() {
+          ctx.fillStyle = 'rgba(17,24,39,0.23)'; // прозрачный фон для затухания следа
+          ctx.fillRect(0, 0, width, height);
+
+          ctx.font = fontSize + "px monospace";
+          ctx.fillStyle = "#4ade80";
+          for (let i = 0; i < drops.length; i++) {
+            const text = charset[Math.floor(Math.random() * charset.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            // Вероятность "обновить" дождь (разная длина)
+            if (drops[i] * fontSize > height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+        }
+
+        let animation = setInterval(draw, 41);
+
+        function handleResize() {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          canvas.width = width;
+          canvas.height = height;
+          drops = Array(Math.floor(width / fontSize)).fill(1);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+          clearInterval(animation);
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
+    }
+
     // Основной компонент
     function App() {
+      useMatrixRain(); // <-- Вот здесь активируется "матрица"
+
       const [activeSection, setActiveSection] = React.useState('about');
       const [loading, setLoading] = React.useState(true);
 
-      // Анимация загрузки
       React.useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 600);
         return () => clearTimeout(timer);
       }, []);
 
-      // Данные проектов
       const projects = [
         {
           title: "AI Chatbot",
@@ -66,7 +140,6 @@
         }
       ];
 
-      // Навигационное меню
       function Nav() {
         const sections = [
           {id: 'about', label: 'Обо мне'},
@@ -88,7 +161,6 @@
         );
       }
 
-      // Блок "Обо мне"
       function AboutSection() {
         return (
           <section>
@@ -102,7 +174,6 @@
         );
       }
 
-      // Блок "Проекты"
       function ProjectsSection() {
         return (
           <section>
@@ -120,7 +191,6 @@
         );
       }
 
-      // Блок "Навыки"
       function SkillsSection() {
         return (
           <section>
@@ -136,9 +206,7 @@
         );
       }
 
-      // Блок "Контакты"
       function ContactSection() {
-        // Для примера — простая форма (можно дополнить отправкой)
         const [form, setForm] = React.useState({name:'', email:'', message:''});
         const [sent, setSent] = React.useState(false);
 
@@ -192,7 +260,6 @@
         );
       }
 
-      // Анимация загрузки
       return (
         <div>
           <div className={"loading-overlay" + (!loading ? " loaded" : "")}>
