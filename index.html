@@ -10,184 +10,98 @@
   <!-- Подключаем Babel для обработки JSX -->
   <script src="https://unpkg.com/ @babel/standalone/babel.min.js"></script>
   <style>
-    @keyframes glitch {
-      0% { transform: translate(0) skew(0deg); opacity: 1; }
-      20% { transform: translate(-2px, -2px) skew(-1deg); opacity: 0.9; }
-      40% { transform: translate(2px, 2px) skew(1deg); opacity: 0.8; }
-      60% { transform: translate(-2px, 2px) skew(-1deg); opacity: 0.9; }
-      80% { transform: translate(2px, -2px) skew(1deg); opacity: 0.95; }
-      100% { transform: translate(0) skew(0deg); opacity: 1; }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #0f0f0f;
+      color: #ccc;
     }
-
-    .glitch {
-      position: relative;
-      animation: glitch 1.5s infinite;
+    h1, h2, h3 {
+      color: #00ff80;
     }
-
-    .glow {
-      text-shadow: 0 0 5px #00ff80, 0 0 10px #00ff80, 0 0 20px #00ff80;
+    a {
+      color: #00ff80;
+      text-decoration: none;
     }
-
-    .bg-grid-pattern {
-      background-image: linear-gradient(to right, rgba(0,255,128,0.05) 1px, transparent 1px),
-                        linear-gradient(to bottom, rgba(0,255,128,0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
+    button {
+      padding: 10px 20px;
+      background: #00ff80;
+      color: black;
+      border: none;
+      cursor: pointer;
     }
-
-    .animate-fade-in {
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .loaded .loading-overlay {
-      display: none !important;
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div id="root"></div>
 
-  <!-- Твой JSX-код -->
+  <!-- JSX код -->
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState } = React;
 
     function App() {
-      const [activeSection, setActiveSection] = useState('about');
-      const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-      useEffect(() => {
-        const timer = setTimeout(() => {
-          document.body.classList.add('loaded');
-        }, 100);
-        return () => clearTimeout(timer);
-      }, []);
-
-      const projects = [
-        { title: "AI Chatbot", description: "React + Node.js чат-бот с интеграцией OpenAI API.", tags: ["React", "Node.js", "OpenAI"] },
-        { title: "E-commerce Dashboard", description: "Панель управления магазином с аналитикой.", tags: ["Vue", "Vuex", "Firebase"] },
-        { title: "Code Editor Extension", description: "Расширение VS Code с автокомментированием.", tags: ["TypeScript", "VSCode API"] },
-        { title: "Fitness Tracker", description: "Мобильное приложение на React Native.", tags: ["React Native", "Redux", "Expo"] }
-      ];
-
-      const skills = [
-        { name: "JavaScript", level: 95 },
-        { name: "React", level: 92 },
-        { name: "Node.js", level: 88 },
-        { name: "Python", level: 85 },
-        { name: "TypeScript", level: 87 },
-        { name: "GraphQL", level: 80 },
-        { name: "Docker", level: 78 },
-        { name: "AWS", level: 75 }
-      ];
-
-      const Nav = () => (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-sm border-b border-green-500/20">
-          <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div className="text-green-400 font-mono text-lg glow">{'SHMAKOV NIKITA'}</div>
-            <button 
-              className="md:hidden text-green-400 hover:text-green-300 transition-colors"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-            <ul className="hidden md:flex space-x-8">
-              {['about', 'projects', 'skills', 'contact'].map((item) => (
-                <li key={item}>
-                  <button
-                    onClick={() => {
-                      setActiveSection(item);
-                      setIsMenuOpen(false);
-                    }}
-                    className={`text-sm uppercase tracking-wider transition-all ${
-                      activeSection === item 
-                        ? 'text-green-400 border-b-2 border-green-400 pb-1' 
-                        : 'text-gray-400 hover:text-green-300'
-                    }`}
-                  >
-                    {item}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {isMenuOpen && (
-            <div className="md:hidden bg-gray-900/95 backdrop-blur-sm border-t border-green-500/20">
-              <ul className="flex flex-col space-y-4 p-4">
-                {['about', 'projects', 'skills', 'contact'].map((item) => (
-                  <li key={item}>
-                    <button
-                      onClick={() => {
-                        setActiveSection(item);
-                        setIsMenuOpen(false);
-                      }}
-                      className={`w-full text-left py-2 px-4 rounded transition-colors ${
-                        activeSection === item 
-                          ? 'bg-green-500/20 text-green-400' 
-                          : 'text-gray-400 hover:bg-green-500/10 hover:text-green-300'
-                      }`}
-                    >
-                      {item}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </nav>
-      );
-
-      const AboutSection = () => (
-        <section className="min-h-screen pt-20 flex items-center">
-          <div className="container mx-auto px-4 py-16">
-            <div className="max-w-3xl mx-auto">
-              <h1 className="text-4xl md:text-6xl font-bold text-green-400 mb-6 glitch">I'm a Full Stack Developer</h1>
-              <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
-                Создаю современные веб-приложения и цифровые решения.
-              </p>
-            </div>
-          </div>
-        </section>
-      );
+      const [activeSection] = useState('about');
 
       return (
-        <div className="font-sans text-gray-200 bg-gray-950 min-h-screen relative overflow-hidden">
-          <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-            <div className="absolute inset-0 bg-grid-pattern"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-blue-500/10"></div>
-          </div>
-          <div className="loading-overlay fixed inset-0 bg-gray-950 z-50 flex items-center justify-center transition-opacity duration-500 loaded:opacity-0">
-            <div className="text-center">
-              <div className="relative inline-block h-24 w-24 mb-6">
-                <div className="absolute inset-0 rounded-full border-4 border-green-500/30"></div>
-                <div className="absolute inset-0 rounded-full border-4 border-t-green-500 animate-spin"></div>
-              </div>
-              <h1 className="text-3xl font-bold text-green-400 mb-2">Loading Portfolio</h1>
-              <p className="text-green-400/70">Initializing digital presence...</p>
-            </div>
-          </div>
-          <Nav />
-          <main className="relative z-10">
-            <AboutSection />
+        <div>
+          <header style={{ textAlign: 'center', padding: '20px' }}>
+            <h1>SHMAKOV NIKITA</h1>
+            <nav>
+              <button onClick={() => setActiveSection('about')}>About</button>
+              <button onClick={() => setActiveSection('projects')}>Projects</button>
+              <button onClick={() => setActiveSection('contact')}>Contact</button>
+            </nav>
+          </header>
+
+          <main style={{ padding: '20px' }}>
+            {activeSection === 'about' && (
+              <section>
+                <h2>I'm a Full Stack Developer</h2>
+                <p>Создаю современные веб-приложения и цифровые решения.</p>
+                <p>Более 5 лет опыта</p>
+              </section>
+            )}
+
+            {activeSection === 'projects' && (
+              <section>
+                <h2>Projects</h2>
+                <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
+                  <li>
+                    <h3>AI Chatbot</h3>
+                    <p>React + Node.js чат-бот с интеграцией OpenAI API.</p>
+                  </li>
+                  <li>
+                    <h3>E-commerce Dashboard</h3>
+                    <p>Панель управления магазином с аналитикой.</p>
+                  </li>
+                </ul>
+              </section>
+            )}
+
+            {activeSection === 'contact' && (
+              <section>
+                <h2>Contact</h2>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  alert('Сообщение отправлено!');
+                }}>
+                  <input type="text" placeholder="Имя" required style={{ width: '100%', marginBottom: '10px', padding: '10px' }} />
+                  <input type="email" placeholder="Email" required style={{ width: '100%', marginBottom: '10px', padding: '10px' }} />
+                  <textarea rows="4" placeholder="Сообщение" required style={{ width: '100%', marginBottom: '10px', padding: '10px' }}></textarea>
+                  <button type="submit">Send Message</button>
+                </form>
+              </section>
+            )}
           </main>
-          <footer className="py-8 border-t border-green-500/20">
-            <div className="container mx-auto px-4">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <div className="text-green-400 font-mono text-sm mb-4 md:mb-0">{'<developed_by_me />'}</div>
-                <div className="text-gray-500 text-sm">© {new Date().getFullYear()} All rights reserved</div>
-              </div>
-            </div>
+
+          <footer style={{ textAlign: 'center', padding: '20px', borderTop: '1px solid #222' }}>
+            <p>© {new Date().getFullYear()} Все права защищены</p>
           </footer>
         </div>
       );
