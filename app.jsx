@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+// app.jsx
+const { useState, useEffect } = React;
 
-export default function App() {
+function App() {
   const [activeSection, setActiveSection] = useState('about');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Простой эффект для анимации при загрузке
   useEffect(() => {
     const timer = setTimeout(() => {
       document.body.classList.add('loaded');
@@ -49,53 +49,28 @@ export default function App() {
   ];
 
   // Компонент навигационного меню
-  const Nav = () => (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-sm border-b border-green-500/20">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="text-green-400 font-mono text-lg glow">{'SHMAKOV NIKITA'}</div>
-        
-        {/* Мобильное меню */}
-        <button 
-          className="md:hidden text-green-400 hover:text-green-300 transition-colors"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
-
-        {/* Десктоп меню */}
-        <ul className="hidden md:flex space-x-8">
-          {['about', 'projects', 'skills', 'contact'].map((item) => (
-            <li key={item}>
-              <button
-                onClick={() => {
-                  setActiveSection(item);
-                  setIsMenuOpen(false);
-                }}
-                className={`text-sm uppercase tracking-wider transition-all ${
-                  activeSection === item 
-                    ? 'text-green-400 border-b-2 border-green-400 pb-1' 
-                    : 'text-gray-400 hover:text-green-300'
-                }`}
-              >
-                {item}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Мобильное меню контент */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-gray-900/95 backdrop-blur-sm border-t border-green-500/20">
-          <ul className="flex flex-col space-y-4 p-4">
+  function Nav() {
+    return (
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-sm border-b border-green-500/20">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <div className="text-green-400 font-mono text-lg glow">{'SHMAKOV NIKITA'}</div>
+          {/* Мобильное меню */}
+          <button
+            className="md:hidden text-green-400 hover:text-green-300 transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
+          {/* Десктоп меню */}
+          <ul className="hidden md:flex space-x-8">
             {['about', 'projects', 'skills', 'contact'].map((item) => (
               <li key={item}>
                 <button
@@ -103,10 +78,10 @@ export default function App() {
                     setActiveSection(item);
                     setIsMenuOpen(false);
                   }}
-                  className={`w-full text-left py-2 px-4 rounded transition-colors ${
+                  className={`text-sm uppercase tracking-wider transition-all ${
                     activeSection === item 
-                      ? 'bg-green-500/20 text-green-400' 
-                      : 'text-gray-400 hover:bg-green-500/10 hover:text-green-300'
+                      ? 'text-green-400 border-b-2 border-green-400 pb-1' 
+                      : 'text-gray-400 hover:text-green-300'
                   }`}
                 >
                   {item}
@@ -115,162 +90,185 @@ export default function App() {
             ))}
           </ul>
         </div>
-      )}
-    </nav>
-  );
+        {/* Мобильное меню контент */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-gray-900/95 backdrop-blur-sm border-t border-green-500/20">
+            <ul className="flex flex-col space-y-4 p-4">
+              {['about', 'projects', 'skills', 'contact'].map((item) => (
+                <li key={item}>
+                  <button
+                    onClick={() => {
+                      setActiveSection(item);
+                      setIsMenuOpen(false);
+                    }}
+                    className={`w-full text-left py-2 px-4 rounded transition-colors ${
+                      activeSection === item 
+                        ? 'bg-green-500/20 text-green-400' 
+                        : 'text-gray-400 hover:bg-green-500/10 hover:text-green-300'
+                    }`}
+                  >
+                    {item}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </nav>
+    );
+  }
 
   // Компонент секции About
-  const AboutSection = () => (
-    <section className="min-h-screen pt-20 flex items-center">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold text-green-400 mb-6 glitch" data-text="I'm a Full Stack Developer">
-            I'm a Full Stack Developer
-          </h1>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
-            Создаю современные веб-приложения и цифровые решения. Специализируюсь на разработке высоконагруженных систем,
-            автоматизации процессов и создании пользовательских интерфейсов нового поколения.
-          </p>
-          <div className="grid grid-cols-2 gap-4 mb-10">
-            <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-green-500/20">
-              <div className="text-green-400 text-2xl font-bold">+5</div>
-              <div className="text-gray-400 text-sm">лет опыта</div>
+  function AboutSection() {
+    return (
+      <section className="min-h-screen pt-20 flex items-center">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-bold text-green-400 mb-6 glitch" data-text="I'm a Full Stack Developer">
+              I'm a Full Stack Developer
+            </h1>
+            <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
+              Создаю современные веб-приложения и цифровые решения. Специализируюсь на разработке высоконагруженных систем,
+              автоматизации процессов и создании пользовательских интерфейсов нового поколения.
+            </p>
+            <div className="grid grid-cols-2 gap-4 mb-10">
+              <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-green-500/20">
+                <div className="text-green-400 text-2xl font-bold">+5</div>
+                <div className="text-gray-400 text-sm">лет опыта</div>
+              </div>
+              <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-green-500/20">
+                <div className="text-green-400 text-2xl font-bold">+30</div>
+                <div className="text-gray-400 text-sm">проектов реализовано</div>
+              </div>
             </div>
-            <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-green-500/20">
-              <div className="text-green-400 text-2xl font-bold">+30</div>
-              <div className="text-gray-400 text-sm">проектов реализовано</div>
+            <div className="flex space-x-4">
+              <a href="#contact" className="px-6 py-3 bg-green-500 hover:bg-green-400 text-black font-medium rounded-lg transition-colors">
+                Hire Me
+              </a>
+              <a href="#" className="px-6 py-3 border border-green-500 hover:border-green-400 text-green-400 hover:text-green-300 font-medium rounded-lg transition-colors">
+                Download CV
+              </a>
             </div>
-          </div>
-          <div className="flex space-x-4">
-            <a href="#contact" className="px-6 py-3 bg-green-500 hover:bg-green-400 text-black font-medium rounded-lg transition-colors">
-              Hire Me
-            </a>
-            <a href="#" className="px-6 py-3 border border-green-500 hover:border-green-400 text-green-400 hover:text-green-300 font-medium rounded-lg transition-colors">
-              Download CV
-            </a>
           </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
+  }
 
   // Компонент секции Projects
-  const ProjectsSection = () => (
-    <section id="projects" className="min-h-screen pt-20 pb-24">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-12">Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <div 
-              key={index}
-              className="bg-gray-800/50 backdrop-blur-sm rounded-lg overflow-hidden border border-green-500/20 hover:border-green-500/40 transition-all group"
-            >
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-green-400 mb-2">{project.title}</h3>
-                <p className="text-gray-300 mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag, tagIndex) => (
-                    <span 
-                      key={tagIndex}
-                      className="text-xs px-3 py-1 bg-green-500/20 text-green-400 rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+  function ProjectsSection() {
+    return (
+      <section id="projects" className="min-h-screen pt-20 pb-24">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-12">Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {projects.map((project, index) => (
+              <div 
+                key={index}
+                className="bg-gray-800/50 backdrop-blur-sm rounded-lg overflow-hidden border border-green-500/20 hover:border-green-500/40 transition-all group"
+              >
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-green-400 mb-2">{project.title}</h3>
+                  <p className="text-gray-300 mb-4">{project.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag, tagIndex) => (
+                      <span 
+                        key={tagIndex}
+                        className="text-xs px-3 py-1 bg-green-500/20 text-green-400 rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="px-6 py-4 bg-gray-900/50 border-t border-green-500/10">
+                  <button className="text-green-400 hover:text-green-300 text-sm font-medium flex items-center">
+                    View Project
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
                 </div>
               </div>
-              <div className="px-6 py-4 bg-gray-900/50 border-t border-green-500/10">
-                <button className="text-green-400 hover:text-green-300 text-sm font-medium flex items-center">
-                  View Project
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-
-  // Компонент секции Skills
-  const SkillsSection = () => (
-    <section id="skills" className="min-h-screen pt-20 pb-24">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-12">Skills</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {skills.map((skill, index) => (
-            <div key={index} className="group">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-300">{skill.name}</span>
-                <span className="text-green-400">{skill.level}%</span>
-              </div>
-              <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full transition-all duration-1000 ease-out group-hover:from-green-400 group-hover:to-green-300"
-                  style={{ width: `${skill.level}%` }}
-                ></div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-16">
-          <h3 className="text-2xl font-bold text-green-400 mb-6">Technologies & Tools</h3>
-          <div className="flex flex-wrap gap-4">
-            {[
-              "React", "Vue", "Angular", "Node.js", "Express", "MongoDB", 
-              "PostgreSQL", "Redis", "GraphQL", "REST API", "Docker", 
-              "Kubernetes", "AWS", "Git", "CI/CD", "Webpack", "Vite"
-            ].map((tech, index) => (
-              <span 
-                key={index}
-                className="px-4 py-2 bg-gray-800/50 backdrop-blur-sm rounded-full text-green-400 border border-green-500/20 hover:border-green-500/40 transition-all"
-              >
-                {tech}
-              </span>
             ))}
           </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
+  }
+
+  // Компонент секции Skills
+  function SkillsSection() {
+    return (
+      <section id="skills" className="min-h-screen pt-20 pb-24">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-12">Skills</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {skills.map((skill, index) => (
+              <div key={index} className="group">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-300">{skill.name}</span>
+                  <span className="text-green-400">{skill.level}%</span>
+                </div>
+                <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full transition-all duration-1000 ease-out group-hover:from-green-400 group-hover:to-green-300"
+                    style={{ width: `${skill.level}%` }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-16">
+            <h3 className="text-2xl font-bold text-green-400 mb-6">Technologies & Tools</h3>
+            <div className="flex flex-wrap gap-4">
+              {[
+                "React", "Vue", "Angular", "Node.js", "Express", "MongoDB", 
+                "PostgreSQL", "Redis", "GraphQL", "REST API", "Docker", 
+                "Kubernetes", "AWS", "Git", "CI/CD", "Webpack", "Vite"
+              ].map((tech, index) => (
+                <span 
+                  key={index}
+                  className="px-4 py-2 bg-gray-800/50 backdrop-blur-sm rounded-full text-green-400 border border-green-500/20 hover:border-green-500/40 transition-all"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   // Компонент секции Contact
-  const ContactSection = () => {
+  function ContactSection() {
     const [formState, setFormState] = useState({
       name: '',
       email: '',
       message: ''
     });
     const [submitted, setSubmitted] = useState(false);
-
     const handleChange = (e) => {
       setFormState({
         ...formState,
         [e.target.name]: e.target.value
       });
     };
-
     const handleSubmit = (e) => {
       e.preventDefault();
-      // Здесь можно добавить логику отправки формы
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 3000);
     };
-
     return (
       <section id="contact" className="min-h-screen pt-20 pb-24">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-12">Contact</h2>
-          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <p className="text-gray-300 mb-8">
                 Готов к новым вызовам! Если у вас есть интересный проект или вы хотите обсудить сотрудничество — напишите мне.
               </p>
-              
               <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="mr-4 mt-1 text-green-400">
@@ -283,7 +281,6 @@ export default function App() {
                     <p className="text-gray-400">+1 (555) 123-4567</p>
                   </div>
                 </div>
-
                 <div className="flex items-start">
                   <div className="mr-4 mt-1 text-green-400">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -296,7 +293,6 @@ export default function App() {
                     <p className="text-gray-400">developer@example.com</p>
                   </div>
                 </div>
-
                 <div className="flex items-start">
                   <div className="mr-4 mt-1 text-green-400">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -309,7 +305,6 @@ export default function App() {
                   </div>
                 </div>
               </div>
-
               <div className="mt-8 flex space-x-4">
                 <a href="#" className="text-green-400 hover:text-green-300 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
@@ -328,7 +323,6 @@ export default function App() {
                 </a>
               </div>
             </div>
-
             <div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -343,7 +337,6 @@ export default function App() {
                     className="w-full bg-gray-800/50 backdrop-blur-sm border border-green-500/20 focus:border-green-500 text-white px-4 py-3 rounded-lg outline-none focus:ring-1 focus:ring-green-500 transition-all"
                   />
                 </div>
-                
                 <div>
                   <label htmlFor="email" className="block text-green-400 mb-2">Email</label>
                   <input
@@ -356,7 +349,6 @@ export default function App() {
                     className="w-full bg-gray-800/50 backdrop-blur-sm border border-green-500/20 focus:border-green-500 text-white px-4 py-3 rounded-lg outline-none focus:ring-1 focus:ring-green-500 transition-all"
                   />
                 </div>
-                
                 <div>
                   <label htmlFor="message" className="block text-green-400 mb-2">Message</label>
                   <textarea
@@ -369,14 +361,12 @@ export default function App() {
                     className="w-full bg-gray-800/50 backdrop-blur-sm border border-green-500/20 focus:border-green-500 text-white px-4 py-3 rounded-lg outline-none focus:ring-1 focus:ring-green-500 transition-all"
                   ></textarea>
                 </div>
-                
                 <button
                   type="submit"
                   className="px-6 py-3 bg-green-500 hover:bg-green-400 text-black font-medium rounded-lg transition-colors"
                 >
                   Send Message
                 </button>
-                
                 {submitted && (
                   <div className="text-green-400 animate-fade-in">
                     Сообщение успешно отправлено!
@@ -388,7 +378,7 @@ export default function App() {
         </div>
       </section>
     );
-  };
+  }
 
   return (
     <div className="font-sans text-gray-200 bg-gray-950 min-h-screen relative overflow-hidden">
@@ -397,7 +387,6 @@ export default function App() {
         <div className="absolute inset-0 bg-grid-pattern"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-blue-500/10"></div>
       </div>
-
       {/* Анимация загрузки */}
       <div className="loading-overlay fixed inset-0 bg-gray-950 z-50 flex items-center justify-center transition-opacity duration-500 loaded:opacity-0">
         <div className="text-center">
@@ -409,10 +398,8 @@ export default function App() {
           <p className="text-green-400/70">Initializing digital presence...</p>
         </div>
       </div>
-
       {/* Навигация */}
       <Nav />
-
       {/* Основной контент */}
       <main className="relative z-10">
         {activeSection === 'about' && <AboutSection />}
@@ -420,7 +407,6 @@ export default function App() {
         {activeSection === 'skills' && <SkillsSection />}
         {activeSection === 'contact' && <ContactSection />}
       </main>
-
       {/* Подвал */}
       <footer className="py-8 border-t border-green-500/20">
         <div className="container mx-auto px-4">
@@ -430,64 +416,9 @@ export default function App() {
           </div>
         </div>
       </footer>
-
-      {/* CSS стили */}
-      <style jsx>{`
-        @keyframes glitch {
-          0% {
-            transform: translate(0) skew(0deg);
-            opacity: 1;
-          }
-          20% {
-            transform: translate(-2px, -2px) skew(-1deg);
-            opacity: 0.9;
-          }
-          40% {
-            transform: translate(2px, 2px) skew(1deg);
-            opacity: 0.8;
-          }
-          60% {
-            transform: translate(-2px, 2px) skew(-1deg);
-            opacity: 0.9;
-          }
-          80% {
-            transform: translate(2px, -2px) skew(1deg);
-            opacity: 0.95;
-          }
-          100% {
-            transform: translate(0) skew(0deg);
-            opacity: 1;
-          }
-        }
-
-        .glitch {
-          position: relative;
-          animation: glitch 1.5s infinite;
-        }
-
-        .glow {
-          text-shadow: 0 0 5px #00ff80, 0 0 10px #00ff80, 0 0 20px #00ff80;
-        }
-
-        .bg-grid-pattern {
-          background-image: linear-gradient(to right, rgba(0,255,128,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,255,128,0.05) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .loaded .loading-overlay {
-          display: none !important;
-        }
-      `}</style>
     </div>
   );
 }
-}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
