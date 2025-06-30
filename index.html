@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Portfolio page - GitHub Pages</title>
+  <title>Портфолио на React - GitHub Pages</title>
   <!-- React и ReactDOM CDN -->
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -207,7 +207,7 @@
     }
 
     // Секции
-    function AboutSection() {
+    function AboutSection({setActiveSection}) {
       return (
         <section>
           <h2 className="glow">Hello, I'm a Frontend/Fullstack Developer 👋</h2>
@@ -241,20 +241,21 @@
           </div>
           
           <div style={{display: 'flex', gap: '16px', flexWrap: 'wrap'}}>
-            <a 
-              href="#contact" 
+            <button 
+              onClick={() => setActiveSection('contact')}
               style={{
                 padding: '12px 24px',
                 backgroundColor: '#4ade80',
                 color: '#000',
                 fontWeight: 'bold',
                 borderRadius: '8px',
-                textDecoration: 'none',
+                border: 'none',
+                cursor: 'pointer',
                 transition: 'background-color 0.3s'
               }}
             >
               Hire Me
-            </a>
+            </button>
             <a 
               href="#" 
               style={{
@@ -612,7 +613,7 @@
           <div className="container">
             <NavBar activeSection={activeSection} setActiveSection={setActiveSection}/>
             <main>
-              {activeSection === 'about' && <AboutSection />}
+              {activeSection === 'about' && <AboutSection setActiveSection={setActiveSection} />}
               {activeSection === 'projects' && <ProjectsSection />}
               {activeSection === 'skills' && <SkillsSection />}
               {activeSection === 'contact' && <ContactSection />}
