@@ -118,6 +118,17 @@
         canvas.width = width;
         canvas.height = height;
 
+         // Навыки
+        const skills = [
+          { name: "JavaScript", level: 95 },
+          { name: "React", level: 92 },
+          { name: "Node.js", level: 88 },
+          { name: "Python", level: 85 },
+          { name: "TypeScript", level: 87 },
+          { name: "GraphQL", level: 80 },
+          { name: "Docker", level: 78 },
+          { name: "AWS", level: 75 }
+        ];
         // Массив символов (цифры, латиница, кириллица, катакана)
         const charset = 'アイウエオカキクケコサシスセソ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзиклмнопрстуфхчшщъыьэюя';
         const fontSize = 18;
@@ -258,18 +269,6 @@
       );
     }
     function SkillsSection() {
-      // Навыки
-      const skills = [
-        { name: "JavaScript", level: 95 },
-        { name: "React", level: 92 },
-        { name: "Node.js", level: 88 },
-        { name: "Python", level: 85 },
-        { name: "TypeScript", level: 87 },
-        { name: "GraphQL", level: 80 },
-        { name: "Docker", level: 78 },
-        { name: "AWS", level: 75 }
-      ];
-
       // Компонент секции Skills
       const SkillsSection = () => (
         <section id="skills" className="min-h-screen pt-20 pb-24">
