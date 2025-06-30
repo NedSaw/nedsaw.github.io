@@ -118,17 +118,6 @@
         canvas.width = width;
         canvas.height = height;
 
-         // Навыки
-        const skills = [
-          { name: "JavaScript", level: 95 },
-          { name: "React", level: 92 },
-          { name: "Node.js", level: 88 },
-          { name: "Python", level: 85 },
-          { name: "TypeScript", level: 87 },
-          { name: "GraphQL", level: 80 },
-          { name: "Docker", level: 78 },
-          { name: "AWS", level: 75 }
-        ];
         // Массив символов (цифры, латиница, кириллица, катакана)
         const charset = 'アイウエオカキクケコサシスセソ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзиклмнопрстуфхчшщъыьэюя';
         const fontSize = 18;
@@ -269,8 +258,25 @@
       );
     }
     function SkillsSection() {
-      // Компонент секции Skills
+      
+       // Навыки
       const skills = [
+        { name: "JavaScript", level: 95 },
+        { name: "React", level: 92 },
+        { name: "Node.js", level: 88 },
+        { name: "Python", level: 85 },
+        { name: "TypeScript", level: 87 },
+        { name: "GraphQL", level: 80 },
+        { name: "Docker", level: 78 },
+        { name: "AWS", level: 75 }
+      ];
+      // Компонент секции Skills
+      //const skills = [
+     
+     // ];
+      /////////////////////
+      
+      return (
         <section id="skills" className="min-h-screen pt-20 pb-24">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-12">Skills</h2>
@@ -310,20 +316,17 @@
             </div>
           </div>
         </section>
-      ];
-      /////////////////////
-      
-      return (
-        <section>
-          <h2 className="glow">Навыки 🛠️</h2>
-          <ul>
-            <li>React, Vue, Next.js, React Native, TypeScript</li>
-            <li>Node.js, Express, REST API</li>
-            <li>AI/ML интеграция (OpenAI API)</li>
-            <li>PostgreSQL, Firebase, MongoDB</li>
-            <li>Linux, Docker, Git, CI/CD</li>
-          </ul>
-        </section>
+        
+       // <section>
+        //  <h2 className="glow">Навыки 🛠️</h2>
+         // <ul>
+          //  <li>React, Vue, Next.js, React Native, TypeScript</li>
+           // <li>Node.js, Express, REST API</li>
+           // <li>AI/ML интеграция (OpenAI API)</li>
+           // <li>PostgreSQL, Firebase, MongoDB</li>
+           // <li>Linux, Docker, Git, CI/CD</li>
+          //</ul>
+        //</section>
       );
     }
     function ContactSection() {
