@@ -182,10 +182,10 @@
       }, [opened]);
 
       const sections = [
-        {id: 'about', label: 'Обо мне'},
-        {id: 'projects', label: 'Проекты'},
-        {id: 'skills', label: 'Навыки'},
-        {id: 'contact', label: 'Контакты'},
+        {id: 'about', label: 'About'},
+        {id: 'projects', label: 'Projects'},
+        {id: 'skills', label: 'Skills'},
+        {id: 'contact', label: 'Contact'},
       ];
       return (
         <div className="nav-cnt">
@@ -210,11 +210,11 @@
     function AboutSection() {
       return (
         <section>
-          <h2 className="glow">Привет, я Frontend/Fullstack разработчик 👋</h2>
+          <h2 className="glow">Hello, I'm a Frontend/Fullstack Developer 👋</h2>
           <p>
-            Опыт в React, Node.js, создании сложных SPA и Telegram/AI-ботов.
-            Разрабатываю современные решения, делаю код удобным и быстрым.<br/>
-            Сейчас активно углубляюсь в AI и автоматизации.
+            Experience in React, Node.js, creating complex SPAs and Telegram/AI bots.
+            I develop modern solutions, make code convenient and fast.<br/>
+            Currently actively diving into AI and automation.
           </p>
         </section>
       );
@@ -244,7 +244,7 @@
       ];
       return (
         <section>
-          <h2 className="glow">Мои проекты 🔥</h2>
+          <h2 className="glow">My Projects 🔥</h2>
           <div className="project-list">
             {projects.map(p => (
               <div className="project" key={p.title} style={{
@@ -327,7 +327,7 @@
 
       return (
         <section>
-          <h2 className="glow">Навыки 🛠️</h2>
+          <h2 className="glow">Skills 🛠️</h2>
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '32px'}}>
             {skills.map((skill, index) => (
               <div key={index} style={{marginBottom: '16px'}}>
@@ -351,7 +351,7 @@
           </div>
 
           <div style={{marginTop: '32px'}}>
-            <h3 style={{color: '#4ade80', fontSize: '1.5em', marginBottom: '16px'}}>Технологии & Инструменты</h3>
+            <h3 style={{color: '#4ade80', fontSize: '1.5em', marginBottom: '16px'}}>Technologies & Tools</h3>
             <div style={{display: 'flex', flexWrap: 'wrap', gap: '8px'}}>
               {[
                 "React", "Vue", "Angular", "Node.js", "Express", "MongoDB", 
@@ -392,12 +392,12 @@
 
       return (
         <section>
-          <h2 className="glow">Контакты 📬</h2>
+          <h2 className="glow">Contact 📬</h2>
           
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', marginBottom: '32px'}}>
             <div>
               <p style={{color: '#d1d5db', marginBottom: '24px'}}>
-                Готов к новым вызовам! Если у вас есть интересный проект или вы хотите обсудить сотрудничество — напишите мне.
+                Ready for new challenges! If you have an interesting project or want to discuss collaboration — write to me.
               </p>
               
               <div style={{marginBottom: '24px'}}>
@@ -459,10 +459,10 @@
             </div>
 
             <div>
-              {sent ? (<div style={{color: '#4ade80', padding: '16px', backgroundColor: 'rgba(74, 222, 128, 0.1)', borderRadius: '8px'}}>Спасибо! Сообщение отправлено.</div>) : (
+              {sent ? (<div style={{color: '#4ade80', padding: '16px', backgroundColor: 'rgba(74, 222, 128, 0.1)', borderRadius: '8px'}}>Thank you! Message sent successfully.</div>) : (
               <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
                 <div>
-                  <label style={{color: '#4ade80', display: 'block', marginBottom: '8px'}}>Имя</label>
+                  <label style={{color: '#4ade80', display: 'block', marginBottom: '8px'}}>Name</label>
                   <input
                     name="name"
                     value={form.name}
@@ -499,7 +499,7 @@
                   />
                 </div>
                 <div>
-                  <label style={{color: '#4ade80', display: 'block', marginBottom: '8px'}}>Сообщение</label>
+                  <label style={{color: '#4ade80', display: 'block', marginBottom: '8px'}}>Message</label>
                   <textarea
                     name="message"
                     rows={4}
@@ -527,7 +527,7 @@
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   transition: 'background-color 0.3s'
-                }}>Отправить</button>
+                }}>Send Message</button>
               </form>
               )}
             </div>
@@ -551,8 +551,8 @@
         <div>
           <div className={"loading-overlay" + (!loading ? " loaded" : "")}>
             <div>
-              <h1 className="glow" style={{fontSize:'2em', marginBottom:10}}>Загрузка портфолио...</h1>
-              <div style={{fontSize:'1.5em'}}>Инициализация digital presence</div>
+              <h1 className="glow" style={{fontSize:'2em', marginBottom:10}}>Loading portfolio...</h1>
+              <div style={{fontSize:'1.5em'}}>Initializing digital presence</div>
             </div>
           </div>
           <div className="container">
