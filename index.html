@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Портфолио на React - GitHub Pages</title>
+  <!-- React и ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel для поддержки JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html, body {height:100%;}
+    body { background: #111827; margin: 0; color: #fff; font-family: system-ui, sans-serif; min-height: 100vh;}
+    #matrix-canvas {
+      position: fixed;
+      left: 0; top: 0; 
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events:none;
+      opacity:0.26;
+      filter: blur(0.2px) brightness(110%);
+      transition: opacity 1s;
+    }
+    #root > div {
+      position: relative;
+      z-index: 2;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 16px;}
+    .nav-cnt {position: relative;}
+    .nav {
+      display: flex;
+      gap: 2em;
+      justify-content: center;
+      margin: 20px 0;
+      transition: none;
+      background: none;
+      box-shadow:none;
+      position: static;
+      border-radius:0;
+      padding:0;
+      max-height:unset;
+      opacity:1;
+      pointer-events:auto;
+    }
+    .nav button {
+      background: none; border: none; color: #aaa; font-size: 1em; cursor: pointer; padding: 6px 12px;
+    }
+    .nav .active, .nav button:hover { color: #4ade80; border-bottom: 2px solid #4ade80; }
+    .nav-hamb { display: none; background: none; border: none; font-size: 2em; color: #4ade80; cursor: pointer; }
+    @media (max-width: 700px) {
+      .nav {
+        flex-direction: column;
+        gap: 0;
+        align-items: stretch;
+        position: absolute;
+        top: 55px;
+        left: 0; right: 0;
+        background: rgba(17,24,39,0.955);
+        border-radius:0 0 16px 16px;
+        box-shadow: 0 2px 16px #0005;
+        z-index:11;
+        margin:0;
+        padding: 4px 0 8px 0;
+        transition: max-height 0.3s, opacity 0.3s;
+        max-height: 480px;
+      }
+      .nav.closed {
+        pointer-events: none;
+        opacity: 0;
+        max-height: 0;
+        padding: 0;
+      }
+      .nav button {
+        border-bottom: 1.5px solid #222b3a44;
+        margin: 0 22px;
+        text-align: left;
+        padding: 12px 6px;
+        font-size: 1.2em;
+      }
+      .nav-hamb {
+        display: block;
+        position: absolute;
+        top: 13px; right: 22px; z-index: 12;
+        background: none;
+      }
+      .nav-cnt { position: relative; min-height:52px; }
+    }
+    @media (max-width:399px) {
+      .nav-cnt { min-height:42px; }
+      .nav-hamb { top:5px; right: 7px;}
+    }
+    .loading-overlay { position:fixed; inset:0; background:#0f172a; z-index:1000; display: flex; align-items:center; justify-content:center; transition: opacity 0.6s;}
+    .loading-overlay.loaded { opacity:0; pointer-events: none; }
+    .project-list { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;}
+    .project { background: #1f2937; border: 1px solid #14532d22; border-radius: 10px; padding: 16px; min-width:220px; max-width:260px; flex:1 1 220px; }
+    .tags { margin: 7px 0 0 0; color:#67e8f9; font-size:0.9em;}
+    footer { text-align:center; padding:22px 0; border-top:2px solid #14532d22; color:#4ade80;}
+    input, textarea { width:100%; padding:7px; margin:4px 0 10px; border-radius:6px; background:#222b3a; color:#fff; border:1px solid #18564266;}
+    label { color:#4ade80;}
+    .glow { text-shadow: 0 0 14px #4ade80aa; }
+    .btn { background-color:#4ade8022; border:1px solid #4ade8077; padding:7px 16px; border-radius:5px; color:#4ade80; font-weight:bold; cursor:pointer;}
+    .btn:hover { background-color:#4ade8077; color:#0f172a; }
+  </style>
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <div id="root"></div>
+  <script type="text/babel">
+    // Матрица-анимация
+    function useMatrixRain() {
+      React.useEffect(() => {
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        // Массив символов (цифры, латиница, кириллица, катакана)
+        const charset = 'アイウエオカキクケコサシスセソ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзиклмнопрстуфхчшщъыьэюя';
+        const fontSize = 18;
+        const columns = Math.floor(width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        function draw() {
+          ctx.fillStyle = 'rgba(17,24,39,0.23)';
+          ctx.fillRect(0, 0, width, height);
+
+          ctx.font = fontSize + "px monospace";
+          ctx.fillStyle = "#4ade80";
+          for (let i = 0; i < drops.length; i++) {
+            const text = charset[Math.floor(Math.random() * charset.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+            drops[i]++;
+          }
+        }
+
+        let animation = setInterval(draw, 41);
+
+        function handleResize() {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          canvas.width = width;
+          canvas.height = height;
+          let newColumns = Math.floor(width / fontSize);
+          if (newColumns !== drops.length) {
+            drops = Array(newColumns).fill(1);
+          }
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+          clearInterval(animation);
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
+    }
+
+    // Адаптивное меню с гамбургером
+    function NavBar({activeSection, setActiveSection}) {
+      const [opened, setOpened] = React.useState(false);
+
+      function handleNav(id) {
+        setActiveSection(id);
+        setOpened(false);
+      }
+      React.useEffect(() => {
+        if (!opened) return;
+        function handler(e) {
+          const nav = document.getElementById('mainnav');
+          if (nav && !nav.contains(e.target)) setOpened(false);
+        }
+        window.addEventListener('mousedown', handler);
+        return () => window.removeEventListener('mousedown', handler);
+      }, [opened]);
+
+      const sections = [
+        {id: 'about', label: 'Обо мне'},
+        {id: 'projects', label: 'Проекты'},
+        {id: 'skills', label: 'Навыки'},
+        {id: 'contact', label: 'Контакты'},
+      ];
+      return (
+        <div className="nav-cnt">
+          <button className="nav-hamb" aria-label="Открыть меню" onClick={()=>setOpened(o=>!o)}>
+            ☰
+          </button>
+          <nav id="mainnav" className={"nav" + (opened ? "" : " closed")}>
+            {sections.map(s => (
+              <button
+                key={s.id}
+                className={activeSection === s.id ? 'active' : ''}
+                onClick={() => handleNav(s.id)}>
+                {s.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      );
+    }
+
+    // Секции
+    function AboutSection() {
+      return (
+        <section>
+          <h2 className="glow">Привет, я Frontend/Fullstack разработчик 👋</h2>
+          <p>
+            Опыт в React, Node.js, создании сложных SPA и Telegram/AI-ботов.
+            Разрабатываю современные решения, делаю код удобным и быстрым.<br/>
+            Сейчас активно углубляюсь в AI и автоматизации.
+          </p>
+        </section>
+      );
+    }
+    function ProjectsSection() {
+      const projects = [
+        {
+          title: "AI Chatbot",
+          description: "React + Node.js чат-бот с интеграцией OpenAI API и интерфейсом в стиле терминала.",
+          tags: ["React", "Node.js", "OpenAI"]
+        },
+        {
+          title: "E-commerce Dashboard",
+          description: "Панель управления магазином с аналитикой и интеграцией Stripe.",
+          tags: ["Vue", "Vuex", "Firebase"]
+        },
+        {
+          title: "Code Editor Extension",
+          description: "Расширение VS Code с функцией автокомментирования и рефакторинга кода.",
+          tags: ["TypeScript", "VSCode API"]
+        },
+        {
+          title: "Fitness Tracker",
+          description: "Приложение-трекер для спорта — планирование, анализ, мотивация.",
+          tags: ["React Native", "Redux"]
+        }
+      ];
+      return (
+        <section>
+          <h2 className="glow">Мои проекты 🔥</h2>
+          <div className="project-list">
+            {projects.map(p => (
+              <div className="project" key={p.title}>
+                <h3>{p.title}</h3>
+                <div>{p.description}</div>
+                <div className="tags">{p.tags.join(', ')}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+    function SkillsSection() {
+      return (
+        <section>
+          <h2 className="glow">Навыки 🛠️</h2>
+          <ul>
+            <li>React, Vue, Next.js, React Native, TypeScript</li>
+            <li>Node.js, Express, REST API</li>
+            <li>AI/ML интеграция (OpenAI API)</li>
+            <li>PostgreSQL, Firebase, MongoDB</li>
+            <li>Linux, Docker, Git, CI/CD</li>
+          </ul>
+        </section>
+      );
+    }
+    function ContactSection() {
+      const [form, setForm] = React.useState({name:'', email:'', message:''});
+      const [sent, setSent] = React.useState(false);
+
+      function handleChange(e) {
+        setForm({...form, [e.target.name]: e.target.value});
+      }
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        setSent(true);
+      }
+
+      return (
+        <section>
+          <h2 className="glow">Контакты 📬</h2>
+          {sent ? (<div>Спасибо! Сообщение отправлено.</div>) : (
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Имя</label>
+              <input
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required />
+            </div>
+            <div>
+              <label>Email</label>
+              <input
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                required />
+            </div>
+            <div>
+              <label>Сообщение</label>
+              <textarea
+                name="message"
+                rows={4}
+                value={form.message}
+                onChange={handleChange}
+                required />
+            </div>
+            <button className="btn" type="submit">Отправить</button>
+          </form>
+          )}
+          <div style={{marginTop:10}}>
+            <a href="mailto:your@email.com" style={{color:'#4ade80'}}>your@email.com</a>
+          </div>
+        </section>
+      );
+    }
+
+    // Основной компонент
+    function App() {
+      useMatrixRain();
+      const [activeSection, setActiveSection] = React.useState('about');
+      const [loading, setLoading] = React.useState(true);
+
+      React.useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 600);
+        return () => clearTimeout(timer);
+      }, []);
+
+      return (
+        <div>
+          <div className={"loading-overlay" + (!loading ? " loaded" : "")}>
+            <div>
+              <h1 className="glow" style={{fontSize:'2em', marginBottom:10}}>Загрузка портфолио...</h1>
+              <div style={{fontSize:'1.5em'}}>Инициализация digital presence</div>
+            </div>
+          </div>
+          <div className="container">
+            <NavBar activeSection={activeSection} setActiveSection={setActiveSection}/>
+            <main>
+              {activeSection === 'about' && <AboutSection />}
+              {activeSection === 'projects' && <ProjectsSection />}
+              {activeSection === 'skills' && <SkillsSection />}
+              {activeSection === 'contact' && <ContactSection />}
+            </main>
+          </div>
+          <footer>
+            {'<developed_by_me/>'} &nbsp; © {new Date().getFullYear()}
+          </footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
