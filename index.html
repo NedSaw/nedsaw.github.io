@@ -259,7 +259,7 @@
     }
     function SkillsSection() {
       
-       // Навыки
+      // Навыки
       const skills = [
         { name: "JavaScript", level: 95 },
         { name: "React", level: 92 },
@@ -273,7 +273,7 @@
       // Компонент секции Skills
       //const skills = [
      
-     // ];
+      // ];
       /////////////////////
       
       return (
@@ -382,7 +382,67 @@
         </section>
       );
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    <style jsx>{`
+        @keyframes glitch {
+          0% {
+            transform: translate(0) skew(0deg);
+            opacity: 1;
+          }
+          20% {
+            transform: translate(-2px, -2px) skew(-1deg);
+            opacity: 0.9;
+          }
+          40% {
+            transform: translate(2px, 2px) skew(1deg);
+            opacity: 0.8;
+          }
+          60% {
+            transform: translate(-2px, 2px) skew(-1deg);
+            opacity: 0.9;
+          }
+          80% {
+            transform: translate(2px, -2px) skew(1deg);
+            opacity: 0.95;
+          }
+          100% {
+            transform: translate(0) skew(0deg);
+            opacity: 1;
+          }
+        }
+
+        .glitch {
+          position: relative;
+          animation: glitch 1.5s infinite;
+        }
+
+        .glow {
+          text-shadow: 0 0 5px #00ff80, 0 0 10px #00ff80, 0 0 20px #00ff80;
+        }
+
+        .bg-grid-pattern {
+          background-image: linear-gradient(to right, rgba(0,255,128,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,255,128,0.05) 1px, transparent 1px);
+          background-size: 40px 40px;
+        }
+
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loaded .loading-overlay {
+          display: none !important;
+        }
+      `}</style>
+    
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    
     // Основной компонент
     function App() {
       useMatrixRain();
